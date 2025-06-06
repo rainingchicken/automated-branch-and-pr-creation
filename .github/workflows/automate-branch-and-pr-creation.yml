@@ -43,6 +43,6 @@ jobs:
           git add .
           git commit -m "Automated updates"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push origin HEAD:${GITHUB_HEAD_REF}
+          git push origin HEAD:${GIT_BRANCH}
         env:
-          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
