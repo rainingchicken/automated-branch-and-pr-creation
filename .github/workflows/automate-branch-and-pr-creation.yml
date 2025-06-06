@@ -37,6 +37,6 @@ jobs:
         run: |
           git add .
           git commit -m "Automated updates"
-          git push origin ${{ github.ref_name }}
+          git push -u origin ${{ github.head_ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
