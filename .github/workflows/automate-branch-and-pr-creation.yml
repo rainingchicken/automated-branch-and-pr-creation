@@ -40,6 +40,7 @@ jobs:
         run: |
           git config pull.rebase false
           git pull origin main
+          git add .
           git commit -m "Automated updates"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push origin "${HEAD_REF}"
