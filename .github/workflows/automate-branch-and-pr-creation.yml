@@ -1,16 +1,17 @@
 name: Automated Nerdpack Publication
 on:
-  workflow_dispatch:
-    inputs:
-      confirm:
-        description: "Type PUBLISH to confirm publishing the nerdpack"
-        required: true
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
 
 jobs:
-  publish-nerdpack:
-    if: ${{ github.event.inputs.confirm == 'PUBLISH' }}
-    runs-on: [self-hosted, ecs]
-
+  build_and_publish:
+    if: >
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/publish')
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -36,8 +37,12 @@ jobs:
 
       - name: Commit and Push Lint
         run: |
-          git pull origin main
+          git pull
+          git merge main
           git add .
           git commit -m "Automated updates"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push origin ${{ github.head_ref }}
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push origin "${HEAD_REF}"
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
