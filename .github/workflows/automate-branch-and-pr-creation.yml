@@ -1,16 +1,17 @@
 name: Automated Nerdpack Publication
 on:
-  issue_comment:
-    types: [created]
+  pull_request_review:
+    types: [submitted]
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
-  build_and_publish:
+  publish:
     if: >
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/publish')
+      github.event.review.state == 'approved' &&
+      contains(github.event.review.body, '/publish')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,13 +38,13 @@ jobs:
 
       - name: Commit and Push Lint
         run: |
-          git pull
-          git merge main
+          git config pull.rebase false
+          git pull origin main
           git add .
           git commit -m "Automated updates"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push origin "${HEAD_REF}"
         env:
-          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #
