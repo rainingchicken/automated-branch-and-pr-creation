@@ -28,18 +28,21 @@ jobs:
       - name: Install Node Modules
         uses: bahmutov/npm-install@v1
 
-      - name: Lint
-        run: npm run lint
-
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit and Push Lint
+      - name: Merge with main
         run: |
           git config pull.rebase false
           git pull origin main
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Commit and Push Lint
+        run: |
           git add .
           git commit -m "Automated updates"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
