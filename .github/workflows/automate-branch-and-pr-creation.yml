@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: "Type PUBLISH to confirm publishing the nerdpack"
+        description: "Type YES to confirm publishing the nerdpack"
         required: true
 
 jobs:
   publish-nerdpack:
-    if: ${{ github.event.inputs.confirm == 'PUBLISH' }}
+    if: ${{ github.event.inputs.confirm == 'YES' }}
     runs-on: [self-hosted, ecs]
 
     steps:
