@@ -10,8 +10,7 @@ permissions:
 jobs:
   build_and_publish:
     if: >
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/publish')
+      github.event.issue.pull_request && contains(github.event.review.body, '/publish')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
