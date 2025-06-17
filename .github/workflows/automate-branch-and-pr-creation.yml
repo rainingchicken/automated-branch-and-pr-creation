@@ -38,8 +38,8 @@ jobs:
 
       - name: Commit and Push Lint
         run: |
-          git pull origin main
-          git add .
+          git fetch origin main
+          git rebase origin/main
           git commit -m "Automated updates"
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push origin "${HEAD_REF}"
